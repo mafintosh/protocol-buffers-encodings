@@ -41,6 +41,10 @@ After a value has been decoded `enc.decode.bytes` contains the amount of bytes t
 
 Use this method to calculate how much space is needed to encode a value.
 
+#### `enc.type`
+
+A number indicating the protobuf wire type for the encoding
+
 ## Encodings
 
 The following encodings are available
