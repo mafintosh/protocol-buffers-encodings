@@ -1,0 +1,27 @@
+{
+  "name": "protocol-buffers-encoding",
+  "version": "0.0.0",
+  "description": "WIP - nothing to see here",
+  "main": "index.js",
+  "dependencies": {
+    "signed-varint": "^2.0.1",
+    "varint": "^5.0.0"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3",
+    "tape": "^4.8.0"
+  },
+  "scripts": {
+    "test": "standard && tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/protocol-buffers-encoding.git"
+  },
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/protocol-buffers-encoding/issues"
+  },
+  "homepage": "https://github.com/mafintosh/protocol-buffers-encoding"
+}
