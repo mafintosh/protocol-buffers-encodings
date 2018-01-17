@@ -1,7 +1,7 @@
 {
   "name": "protocol-buffers-encoding",
   "version": "0.0.0",
-  "description": "WIP - nothing to see here",
+  "description": "Base encodings for protocol-buffers",
   "main": "index.js",
   "dependencies": {
     "signed-varint": "^2.0.1",
