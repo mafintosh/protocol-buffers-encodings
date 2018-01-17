@@ -6,6 +6,8 @@ Base encodings for [protocol-buffers](https://github.com/mafintosh/protocol-buff
 npm install protocol-buffers-encoding
 ```
 
+[![build status](https://travis-ci.org/mafintosh/protocol-buffers-encodings.svg?branch=master)](https://travis-ci.org/mafintosh/protocol-buffers-encodings)
+
 Moved into it's own module for lighter installs
 
 ## Usage
