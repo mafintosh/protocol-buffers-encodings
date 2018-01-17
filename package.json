@@ -1,6 +1,6 @@
 {
   "name": "protocol-buffers-encoding",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Base encodings for protocol-buffers",
   "main": "index.js",
   "dependencies": {
