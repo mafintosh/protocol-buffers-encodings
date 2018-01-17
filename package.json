@@ -1,5 +1,5 @@
 {
-  "name": "protocol-buffers-encoding",
+  "name": "protocol-buffers-encodings",
   "version": "1.0.0",
   "description": "Base encodings for protocol-buffers",
   "main": "index.js",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mafintosh/protocol-buffers-encoding.git"
+    "url": "https://github.com/mafintosh/protocol-buffers-encodings.git"
   },
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mafintosh/protocol-buffers-encoding/issues"
+    "url": "https://github.com/mafintosh/protocol-buffers-encodings/issues"
   },
-  "homepage": "https://github.com/mafintosh/protocol-buffers-encoding"
+  "homepage": "https://github.com/mafintosh/protocol-buffers-encodings"
 }

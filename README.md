@@ -1,9 +1,9 @@
-# protocol-buffers-encoding
+# protocol-buffers-encodings
 
 Base encodings for [protocol-buffers](https://github.com/mafintosh/protocol-buffers).
 
 ```
-npm install protocol-buffers-encoding
+npm install protocol-buffers-encodings
 ```
 
 [![build status](https://travis-ci.org/mafintosh/protocol-buffers-encodings.svg?branch=master)](https://travis-ci.org/mafintosh/protocol-buffers-encodings)
