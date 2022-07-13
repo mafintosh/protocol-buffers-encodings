@@ -1,5 +1,6 @@
 var varint = require('varint')
 var svarint = require('signed-varint')
+var b4a = require('b4a')
 
 exports.make = encoder
 
@@ -43,7 +44,7 @@ exports.bytes = encoder(2,
     varint.encode(len, buffer, offset)
     offset += varint.encode.bytes
 
-    if (Buffer.isBuffer(val)) val.copy(buffer, offset)
+    if (b4a.isBuffer(val)) b4a.copy(val, buffer, offset)
     else buffer.write(val, offset, len)
     offset += len
 
@@ -71,7 +72,7 @@ exports.bytes = encoder(2,
 exports.string = encoder(2,
   function encode (val, buffer, offset) {
     var oldOffset = offset
-    var len = Buffer.byteLength(val)
+    var len = b4a.byteLength(val)
 
     varint.encode(len, buffer, offset, 'utf-8')
     offset += varint.encode.bytes
@@ -95,7 +96,7 @@ exports.string = encoder(2,
     return val
   },
   function encodingLength (val) {
-    var len = Buffer.byteLength(val)
+    var len = b4a.byteLength(val)
     return varint.encodingLength(len) + len
   }
 )
@@ -157,8 +158,8 @@ exports.int64 = encoder(0,
       var limit = 9
       while (buffer[offset + limit - 1] === 0xff) limit--
       limit = limit || 9
-      var subset = Buffer.allocUnsafe(limit)
-      buffer.copy(subset, 0, offset, offset + limit)
+      var subset = b4a.allocUnsafe(limit)
+      b4a.copy(buffer, subset, 0, offset, offset + limit)
       subset[limit - 1] = subset[limit - 1] & 0x7f
       val = -1 * varint.decode(subset, 0)
       decode.bytes = 10
@@ -192,7 +193,7 @@ exports.varint = encoder(0,
 exports.fixed64 =
 exports.sfixed64 = encoder(1,
   function encode (val, buffer, offset) {
-    val.copy(buffer, offset)
+    b4a.copy(val, buffer, offset)
     encode.bytes = 8
     return buffer
   },
@@ -282,5 +283,5 @@ function encoder (type, encode, decode, encodingLength) {
 }
 
 function bufferLength (val) {
-  return Buffer.isBuffer(val) ? val.length : Buffer.byteLength(val)
+  return b4a.isBuffer(val) ? val.length : b4a.byteLength(val)
 }
