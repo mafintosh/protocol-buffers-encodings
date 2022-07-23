@@ -71,25 +71,20 @@ tape('fixed64 (browser style)', function (t) {
   )
 })
 
-
- tape('double', function (t) {
+tape('double', function (t) {
   test(t, encodings.double, [0, 2, 0.5, 0.4])
-  // TODO: Fails because writeDoubleLE is not supported by b4a
 })
 
 tape('float', function (t) {
   test(t, encodings.float, [0, 2, 0.5])
-  // TODO: Fails because writeFloatLE is not supported by b4a
 })
 
 tape('fixed32', function (t) {
   test(t, encodings.fixed32, [4, 0, 10000])
-  // TODO: Fails because writeUInt32LE is not supported by b4a
 })
 
 tape('sfixed32', function (t) {
   test(t, encodings.sfixed32, [-100, 4, 0, 142425])
-  // TODO: Fails because writeInt32LE is not supported by b4a
 })
 
 function test (t, enc, vals, allocFunctions = [allocBuffer, allocUint8Array]) {

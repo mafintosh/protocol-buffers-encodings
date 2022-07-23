@@ -209,12 +209,12 @@ exports.sfixed64 = encoder(1,
 
 exports.double = encoder(1,
   function encode (val, buffer, offset) {
-    buffer.writeDoubleLE(val, offset)
+    b4a.writeDoubleLE(buffer, val, offset)
     encode.bytes = 8
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readDoubleLE(offset)
+    var val = b4a.readDoubleLE(buffer, offset)
     decode.bytes = 8
     return val
   },
@@ -225,12 +225,12 @@ exports.double = encoder(1,
 
 exports.fixed32 = encoder(5,
   function encode (val, buffer, offset) {
-    buffer.writeUInt32LE(val, offset)
+    b4a.writeUInt32LE(buffer, val, offset)
     encode.bytes = 4
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readUInt32LE(offset)
+    var val = b4a.readUInt32LE(buffer, offset)
     decode.bytes = 4
     return val
   },
@@ -241,12 +241,12 @@ exports.fixed32 = encoder(5,
 
 exports.sfixed32 = encoder(5,
   function encode (val, buffer, offset) {
-    buffer.writeInt32LE(val, offset)
+    b4a.writeInt32LE(buffer, val, offset)
     encode.bytes = 4
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readInt32LE(offset)
+    var val = b4a.readInt32LE(buffer, offset)
     decode.bytes = 4
     return val
   },
@@ -257,12 +257,12 @@ exports.sfixed32 = encoder(5,
 
 exports.float = encoder(5,
   function encode (val, buffer, offset) {
-    buffer.writeFloatLE(val, offset)
+    b4a.writeFloatLE(buffer, val, offset)
     encode.bytes = 4
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readFloatLE(offset)
+    var val = b4a.readFloatLE(buffer, offset)
     decode.bytes = 4
     return val
   },
