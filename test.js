@@ -91,8 +91,7 @@ function test (t, enc, vals, allocFunctions = [allocBuffer, allocUint8Array]) {
   if (!Array.isArray(vals)) vals = [vals]
 
   for (const allocFunction of allocFunctions) {
-    for (var i = 0; i < vals.length; i++) {
-      const val = vals[i]
+    for (const val of vals) {
       let buf = allocFunction(enc.encodingLength(val))
 
       enc.encode(val, buf, 0)
