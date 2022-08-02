@@ -4,6 +4,7 @@
   "description": "Base encodings for protocol-buffers",
   "main": "index.js",
   "dependencies": {
+    "b4a": "^1.6.0",
     "signed-varint": "^2.0.1",
     "varint": "5.0.0"
   },

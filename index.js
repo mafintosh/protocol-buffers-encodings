@@ -1,5 +1,6 @@
 var varint = require('varint')
 var svarint = require('signed-varint')
+var b4a = require('b4a')
 
 exports.make = encoder
 
@@ -43,8 +44,8 @@ exports.bytes = encoder(2,
     varint.encode(len, buffer, offset)
     offset += varint.encode.bytes
 
-    if (Buffer.isBuffer(val)) val.copy(buffer, offset)
-    else buffer.write(val, offset, len)
+    if (b4a.isBuffer(val)) b4a.copy(val, buffer, offset)
+    else b4a.write(buffer, val, offset, len)
     offset += len
 
     encode.bytes = offset - oldOffset
@@ -56,7 +57,7 @@ exports.bytes = encoder(2,
     var len = varint.decode(buffer, offset)
     offset += varint.decode.bytes
 
-    var val = buffer.slice(offset, offset + len)
+    var val = buffer.subarray(offset, offset + len)
     offset += val.length
 
     decode.bytes = offset - oldOffset
@@ -71,12 +72,12 @@ exports.bytes = encoder(2,
 exports.string = encoder(2,
   function encode (val, buffer, offset) {
     var oldOffset = offset
-    var len = Buffer.byteLength(val)
+    var len = b4a.byteLength(val)
 
     varint.encode(len, buffer, offset, 'utf-8')
     offset += varint.encode.bytes
 
-    buffer.write(val, offset, len)
+    b4a.write(buffer, val, offset, len)
     offset += len
 
     encode.bytes = offset - oldOffset
@@ -88,14 +89,14 @@ exports.string = encoder(2,
     var len = varint.decode(buffer, offset)
     offset += varint.decode.bytes
 
-    var val = buffer.toString('utf-8', offset, offset + len)
+    var val = b4a.toString(buffer, 'utf-8', offset, offset + len)
     offset += len
 
     decode.bytes = offset - oldOffset
     return val
   },
   function encodingLength (val) {
-    var len = Buffer.byteLength(val)
+    var len = b4a.byteLength(val)
     return varint.encodingLength(len) + len
   }
 )
@@ -157,8 +158,8 @@ exports.int64 = encoder(0,
       var limit = 9
       while (buffer[offset + limit - 1] === 0xff) limit--
       limit = limit || 9
-      var subset = Buffer.allocUnsafe(limit)
-      buffer.copy(subset, 0, offset, offset + limit)
+      var subset = b4a.allocUnsafe(limit)
+      b4a.copy(buffer, subset, 0, offset, offset + limit)
       subset[limit - 1] = subset[limit - 1] & 0x7f
       val = -1 * varint.decode(subset, 0)
       decode.bytes = 10
@@ -192,12 +193,12 @@ exports.varint = encoder(0,
 exports.fixed64 =
 exports.sfixed64 = encoder(1,
   function encode (val, buffer, offset) {
-    val.copy(buffer, offset)
+    b4a.copy(val, buffer, offset)
     encode.bytes = 8
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.slice(offset, offset + 8)
+    var val = buffer.subarray(offset, offset + 8)
     decode.bytes = 8
     return val
   },
@@ -208,12 +209,12 @@ exports.sfixed64 = encoder(1,
 
 exports.double = encoder(1,
   function encode (val, buffer, offset) {
-    buffer.writeDoubleLE(val, offset)
+    b4a.writeDoubleLE(buffer, val, offset)
     encode.bytes = 8
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readDoubleLE(offset)
+    var val = b4a.readDoubleLE(buffer, offset)
     decode.bytes = 8
     return val
   },
@@ -224,12 +225,12 @@ exports.double = encoder(1,
 
 exports.fixed32 = encoder(5,
   function encode (val, buffer, offset) {
-    buffer.writeUInt32LE(val, offset)
+    b4a.writeUInt32LE(buffer, val, offset)
     encode.bytes = 4
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readUInt32LE(offset)
+    var val = b4a.readUInt32LE(buffer, offset)
     decode.bytes = 4
     return val
   },
@@ -240,12 +241,12 @@ exports.fixed32 = encoder(5,
 
 exports.sfixed32 = encoder(5,
   function encode (val, buffer, offset) {
-    buffer.writeInt32LE(val, offset)
+    b4a.writeInt32LE(buffer, val, offset)
     encode.bytes = 4
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readInt32LE(offset)
+    var val = b4a.readInt32LE(buffer, offset)
     decode.bytes = 4
     return val
   },
@@ -256,12 +257,12 @@ exports.sfixed32 = encoder(5,
 
 exports.float = encoder(5,
   function encode (val, buffer, offset) {
-    buffer.writeFloatLE(val, offset)
+    b4a.writeFloatLE(buffer, val, offset)
     encode.bytes = 4
     return buffer
   },
   function decode (buffer, offset) {
-    var val = buffer.readFloatLE(offset)
+    var val = b4a.readFloatLE(buffer, offset)
     decode.bytes = 4
     return val
   },
@@ -282,5 +283,5 @@ function encoder (type, encode, decode, encodingLength) {
 }
 
 function bufferLength (val) {
-  return Buffer.isBuffer(val) ? val.length : Buffer.byteLength(val)
+  return b4a.isBuffer(val) ? val.length : b4a.byteLength(val)
 }

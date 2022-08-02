@@ -15,8 +15,22 @@ tape('string', function (t) {
   test(t, encodings.string, ['a', 'abefest', 'øøø'])
 })
 
-tape('bytes', function (t) {
-  test(t, encodings.bytes, [Buffer.alloc(4096), Buffer.from('hi')])
+tape('bytes (node style)', function (t) {
+  test(
+    t,
+    encodings.bytes,
+    [Buffer.alloc(4096), Buffer.from('hi')],
+    [allocBuffer]
+  )
+})
+
+tape('bytes (browser style)', function (t) {
+  test(
+    t,
+    encodings.bytes,
+    [new Uint8Array(4096), new Uint8Array([104, 105])],
+    [allocUint8Array]
+  )
 })
 
 tape('bool', function (t) {
@@ -39,8 +53,22 @@ tape('uint64', function (t) {
   test(t, encodings.uint64, [1, 0, 144, 424444, 4203595524])
 })
 
-tape('fixed64', function (t) {
-  test(t, encodings.fixed64, [Buffer.from([0, 0, 0, 0, 0, 0, 0, 1])])
+tape('fixed64 (node style)', function (t) {
+  test(
+    t,
+    encodings.fixed64,
+    [Buffer.from([0, 0, 0, 0, 0, 0, 0, 1])],
+    [allocBuffer]
+  )
+})
+
+tape('fixed64 (browser style)', function (t) {
+  test(
+    t,
+    encodings.fixed64,
+    [new Uint8Array([0, 0, 0, 0, 0, 0, 0, 1])],
+    [allocUint8Array]
+  )
 })
 
 tape('double', function (t) {
@@ -59,28 +87,65 @@ tape('sfixed32', function (t) {
   test(t, encodings.sfixed32, [-100, 4, 0, 142425])
 })
 
-function test (t, enc, vals) {
+function test (t, enc, vals, allocFunctions = [allocBuffer, allocUint8Array]) {
   if (!Array.isArray(vals)) vals = [vals]
 
-  for (var i = 0; i < vals.length; i++) {
-    var val = vals[i]
-    var buf = Buffer.alloc(enc.encodingLength(val))
+  for (const allocFunction of allocFunctions) {
+    for (const val of vals) {
+      let buf = allocFunction(enc.encodingLength(val))
 
-    enc.encode(val, buf, 0)
+      enc.encode(val, buf, 0)
 
-    t.same(enc.encode.bytes, buf.length)
-    t.same(enc.encodingLength(val), buf.length)
-    t.same(enc.decode(buf, 0), val)
-    t.same(enc.decode.bytes, buf.length)
+      t.same(enc.encode.bytes, buf.length)
+      t.same(enc.encodingLength(val), buf.length)
+      t.same(enc.decode(buf, 0), val)
+      t.same(enc.decode.bytes, buf.length)
 
-    var anotherBuf = Buffer.alloc(enc.encodingLength(val) + 1000)
+      const anotherBuf = allocFunction(enc.encodingLength(val) + 1000)
 
-    buf = enc.encode(val, anotherBuf, 10)
-    t.same(buf, anotherBuf)
-    t.ok(enc.encode.bytes < anotherBuf.length)
-    t.same(enc.decode(buf, 10, 10 + enc.encodingLength(val)), val)
-    t.ok(enc.decode.bytes < anotherBuf.length)
+      buf = enc.encode(val, anotherBuf, 10)
+      t.same(buf, anotherBuf)
+      t.ok(enc.encode.bytes < anotherBuf.length)
+      t.same(enc.decode(buf, 10, 10 + enc.encodingLength(val)), val)
+      t.ok(enc.decode.bytes < anotherBuf.length)
+    }
   }
 
   t.end()
+}
+
+tape('test browser-style buffer', function (t) {
+  const enc = encodings.string
+  const val = 'value'
+  let buf = new Uint8Array(enc.encodingLength(val))
+  enc.encode(val, buf, 0)
+
+  // First elem is the length (5). Others are the encoded 'value'
+  const expectedEncodedVal = new Uint8Array([5, 118, 97, 108, 117, 101])
+  t.same(buf, expectedEncodedVal)
+
+  t.same(enc.encode.bytes, buf.length)
+  t.same(enc.encodingLength(val), buf.length)
+  t.same(enc.decode(buf, 0), val)
+  t.same(enc.decode.bytes, buf.length)
+
+  const anotherBuf = new Uint8Array(enc.encodingLength(val) + 1000)
+
+  buf = enc.encode(val, anotherBuf, 10)
+  t.same(buf, anotherBuf)
+  t.ok(enc.encode.bytes < anotherBuf.length)
+  t.same(enc.decode(buf, 10, 10 + enc.encodingLength(val)), val)
+  t.ok(enc.decode.bytes < anotherBuf.length)
+
+  t.end()
+})
+
+function allocBuffer (length) {
+  // Node style
+  return Buffer.alloc(length)
+}
+
+function allocUint8Array (length) {
+  // Browser style
+  return new Uint8Array(length)
 }

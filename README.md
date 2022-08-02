@@ -6,9 +6,11 @@ Base encodings for [protocol-buffers](https://github.com/mafintosh/protocol-buff
 npm install protocol-buffers-encodings
 ```
 
+Note: use Node.js >= 16.15.0 to avoid a performance regression due to a slower `Buffer.subarray` function.
+
 [![build status](https://travis-ci.org/mafintosh/protocol-buffers-encodings.svg?branch=master)](https://travis-ci.org/mafintosh/protocol-buffers-encodings)
 
-Moved into it's own module for lighter installs
+Moved into its own module for lighter installs
 
 ## Usage
 
@@ -27,13 +29,13 @@ In general all encoders follow this API
 #### `buffer = enc.encode(value, buffer, offset)`
 
 Encode a value. `buffer` should be a buffer big enough to fit the value, `offset` should be the byte offset in the buffer where you want to write it.
-The buffer is returned for conveinience.
+The buffer is returned for convenience.
 
 After a value has been encoded `enc.encode.bytes` contains the amount of bytes used in the buffer.
 
 #### `value = enc.decode(buffer, offset)`
 
-Decode a value. `buffer` shoudl be an encoded value and `offset` should be the byte offset where you want to start decoding.
+Decode a value. `buffer` should be an encoded value and `offset` should be the byte offset where you want to start decoding.
 
 After a value has been decoded `enc.decode.bytes` contains the amount of bytes that was consumed from the buffer.
 
